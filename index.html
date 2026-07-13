@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="박재홍 백엔드 엔지니어 포트폴리오" />
+  <title>박재홍 | Backend Engineering Portfolio</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #073b63;
+      --blue: #0879be;
+      --surface: #f4f7fa;
+      --line: #d8e2ea;
+      --text: #17324d;
+      --muted: #617487;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .header {
+      background: linear-gradient(120deg, var(--navy), var(--blue));
+      color: white;
+    }
+
+    .header-inner,
+    .viewer-wrap {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 24px 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(21px, 3vw, 30px);
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      opacity: 0.9;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid rgba(255,255,255,0.75);
+      border-radius: 7px;
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .button.primary {
+      color: var(--navy);
+      background: white;
+    }
+
+    .viewer-wrap { padding: 18px 0 28px; }
+
+    .viewer {
+      width: 100%;
+      height: calc(100vh - 144px);
+      min-height: 720px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(24, 54, 79, 0.08);
+    }
+
+    .fallback {
+      margin: 12px 2px 0;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .fallback a { color: var(--blue); }
+
+    @media (max-width: 720px) {
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .actions { width: 100%; }
+      .button { flex: 1; }
+      .viewer { height: calc(100vh - 220px); min-height: 580px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div>
+        <h1>박재홍 | Backend Engineering Portfolio</h1>
+        <p class="subtitle">Java와 Spring을 기반으로 정합성 있는 API와 운영 가능한 서비스를 구현합니다.</p>
+      </div>
+      <nav class="actions" aria-label="포트폴리오 링크">
+        <a class="button primary" href="./portfolio.pdf" target="_blank" rel="noopener">PDF 새 창에서 보기</a>
+        <a class="button" href="https://github.com/PHJ2000" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="viewer-wrap">
+    <iframe
+      class="viewer"
+      src="./portfolio.pdf#view=FitH"
+      title="박재홍 백엔드 엔지니어 포트폴리오 PDF"
+    ></iframe>
+    <p class="fallback">
+      PDF가 보이지 않으면 <a href="./portfolio.pdf" target="_blank" rel="noopener">여기에서 직접 열어주세요.</a>
+    </p>
+  </main>
+</body>
+</html>
