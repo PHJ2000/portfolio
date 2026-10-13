@@ -1,147 +1,618 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="박재홍 백엔드 엔지니어 포트폴리오" />
-  <title>박재홍 | Backend Engineering Portfolio</title>
-  <style>
-    :root {
-      color-scheme: light;
-      --navy: #073b63;
-      --blue: #0879be;
-      --surface: #f4f7fa;
-      --line: #d8e2ea;
-      --text: #17324d;
-      --muted: #617487;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>박재홍 · Backend Engineer</title>
+<meta name="description" content="Java·Spring 백엔드 엔지니어 박재홍의 포트폴리오. 위굴(Google Play 출시)·Beach Complex 백엔드와 Java 오픈소스 34개 머지 PR.">
+<meta property="og:title" content="박재홍 · Backend Engineer">
+<meta property="og:description" content="정합성, 재시도·동시성 제어, 배포와 관측까지 — Java·Spring 백엔드 포트폴리오">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #f6f6f3;
+  --surface: #ffffff;
+  --ink: #15171b;
+  --ink-2: #3a3f47;
+  --muted: #69707b;
+  --line: #e2e3de;
+  --line-strong: #cfd1ca;
+  --accent: #1d6b57;
+  --accent-soft: #e4f0eb;
+  --code-bg: #f1f2ee;
+  --warn: #9a4b16;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111315;
+    --surface: #181b1e;
+    --ink: #eceee9;
+    --ink-2: #c7cbc6;
+    --muted: #949a9f;
+    --line: #2a2e32;
+    --line-strong: #3a3f44;
+    --accent: #6cc4a6;
+    --accent-soft: #1b2e28;
+    --code-bg: #1f2326;
+    --warn: #e0a070;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+a { color: inherit; }
+.wrap { width: min(1040px, 100% - 32px); margin: 0 auto; }
 
-    * { box-sizing: border-box; }
+/* top bar */
+.bar {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 56px; }
+.bar .me { font-weight: 700; text-decoration: none; letter-spacing: -0.01em; white-space: nowrap; }
+.bar nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.bar nav::-webkit-scrollbar { display: none; }
+.bar nav a {
+  text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500;
+  padding: 6px 10px; border-radius: 6px; white-space: nowrap;
+}
+.bar nav a:hover { color: var(--ink); background: var(--line); }
 
-    html, body { height: 100%; }
+/* hero */
+.hero { padding: 72px 0 56px; }
+.eyebrow {
+  font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 14px;
+}
+.hero h1 { font-size: clamp(40px, 7vw, 64px); line-height: 1.1; letter-spacing: -0.035em; margin: 0 0 22px; }
+.hero .lead { font-size: clamp(17px, 2.2vw, 20px); color: var(--ink-2); max-width: 680px; margin: 0 0 28px; line-height: 1.65; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 9px 16px;
+  border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface);
+  text-decoration: none; font-size: 15px; font-weight: 600;
+}
+.btn:hover { border-color: var(--ink); }
+.btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn svg { width: 17px; height: 17px; flex: none; }
 
-    body {
-      margin: 0;
-      font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
-      background: var(--surface);
-      color: var(--text);
-    }
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 48px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden;
+}
+.stat { padding: 20px 22px; border-left: 1px solid var(--line); }
+.stat:first-child { border-left: 0; }
+.stat b { display: block; font-family: var(--mono); font-size: clamp(24px, 3.4vw, 32px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }
+.stat span { display: block; color: var(--muted); font-size: 14px; margin-top: 6px; line-height: 1.45; }
 
-    .header {
-      background: linear-gradient(120deg, var(--navy), var(--blue));
-      color: white;
-    }
+/* sections */
+section.block { padding: 64px 0; border-top: 1px solid var(--line); }
+.sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+.sec-no { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+h2 { font-size: clamp(26px, 3.6vw, 34px); letter-spacing: -0.03em; line-height: 1.25; margin: 0; }
+h3 { font-size: 20px; letter-spacing: -0.02em; margin: 0; line-height: 1.4; }
+p { margin: 0 0 14px; }
 
-    .header-inner,
-    .viewer-wrap {
-      width: min(1240px, calc(100% - 32px));
-      margin: 0 auto;
-    }
+/* skills */
+.skills { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.skill { display: grid; grid-template-columns: 170px 1fr; gap: 8px 20px; align-items: center; padding: 16px 22px; border-top: 1px solid var(--line); }
+.skill:first-child { border-top: 0; }
+.skill h3 { font-family: var(--mono); font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.chips li { font-size: 14px; padding: 3px 10px; border-radius: 999px; background: var(--code-bg); color: var(--ink-2); }
 
-    .header-inner {
-      padding: 24px 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
+/* project */
+.project-head { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; align-items: start; margin-bottom: 28px; }
+.project-head h2 { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; letter-spacing: 0;
+  padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); text-decoration: none; white-space: nowrap;
+}
+.badge svg { width: 14px; height: 14px; }
+.project-head .summary { grid-column: 1 / -1; color: var(--ink-2); font-size: 17px; max-width: 760px; margin: 4px 0 0; }
+.meta { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 6px 36px; margin: 0 0 28px; padding: 18px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.meta div { min-width: 0; }
+.meta dt { font-size: 13px; color: var(--muted); }
+.meta dd { margin: 2px 0 0; font-weight: 600; font-size: 15px; }
+.meta dd a { text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: clamp(21px, 3vw, 30px);
-      letter-spacing: -0.04em;
-    }
+.flow { list-style: none; padding: 0; margin: 0 0 32px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; counter-reset: f; }
+.flow li { counter-increment: f; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 14px; line-height: 1.45; color: var(--muted); }
+.flow li::before { content: counter(f, decimal-leading-zero); display: block; font-family: var(--mono); font-size: 11.5px; color: var(--accent); margin-bottom: 4px; }
+.flow li b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 2px; }
 
-    .subtitle {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.55;
-      opacity: 0.9;
-    }
+.cases { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.case { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 26px 28px; }
+.case-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 20px; flex-wrap: wrap; margin-bottom: 16px; }
+.case-top h3 { display: flex; gap: 12px; align-items: baseline; }
+.case-top h3 .n { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 600; }
+.prs { display: flex; flex-wrap: wrap; gap: 6px; }
+.pr {
+  font-family: var(--mono); font-size: 12.5px; text-decoration: none; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; white-space: nowrap;
+}
+.pr:hover { color: var(--accent); border-color: var(--accent); }
+.pv { display: grid; grid-template-columns: 52px 1fr; gap: 10px 16px; margin: 0; }
+.pv dt { font-size: 13px; font-weight: 700; color: var(--muted); padding-top: 2px; }
+.pv dd { margin: 0; color: var(--ink-2); }
+.pv dd ul { margin: 0; padding-left: 18px; }
+.pv dd li + li { margin-top: 2px; }
+.pv dd strong { color: var(--ink); }
+.result { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.result span {
+  font-size: 14px; font-variant-numeric: tabular-nums; padding: 6px 12px; border-radius: 8px;
+  background: var(--accent-soft); color: var(--accent); font-weight: 600;
+}
+.result span.plain { background: var(--code-bg); color: var(--ink-2); font-weight: 400; }
+pre {
+  margin: 16px 0 0; padding: 16px 18px; background: var(--code-bg); border-radius: 10px;
+  font-family: var(--mono); font-size: 13px; line-height: 1.6; overflow-x: auto; color: var(--ink-2);
+}
+pre .k { color: var(--accent); font-weight: 600; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+pre code { background: none; padding: 0; font-size: inherit; }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      flex-shrink: 0;
-    }
+.steps { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.steps li { font-size: 13.5px; padding: 5px 11px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--bg); }
+.steps li.arrow { border: 0; background: none; padding: 0 2px; color: var(--muted); }
+.steps li.ok { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 9px 14px;
-      border: 1px solid rgba(255,255,255,0.75);
-      border-radius: 7px;
-      color: white;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-      background: rgba(255,255,255,0.12);
-    }
+/* oss */
+.oss-intro { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; margin-bottom: 32px; align-items: end; }
+.oss-intro p { color: var(--ink-2); font-size: 17px; margin: 0; }
+.oss-nums { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.oss-nums div { padding: 16px 18px; border-left: 1px solid var(--line); }
+.oss-nums div:first-child { border-left: 0; }
+.oss-nums b { display: block; font-family: var(--mono); font-size: 26px; font-weight: 600; letter-spacing: -0.03em; }
+.oss-nums span { font-size: 13px; color: var(--muted); }
+.oss-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.oss-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; }
+.oss-card .repo { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 8px; }
+.oss-card .repo a { font-family: var(--mono); font-size: 14px; font-weight: 600; text-decoration: none; color: var(--accent); }
+.oss-card .repo span { font-family: var(--mono); font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.oss-card h3 { font-size: 17px; margin-bottom: 10px; }
+.oss-card p { color: var(--ink-2); font-size: 15px; margin-bottom: 8px; }
+.oss-card .verify { margin-top: auto; padding-top: 10px; font-size: 13.5px; color: var(--muted); border-top: 1px dashed var(--line); }
 
-    .button.primary {
-      color: var(--navy);
-      background: white;
-    }
+details.all { margin-top: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+details.all summary { cursor: pointer; padding: 18px 24px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+details.all summary::-webkit-details-marker { display: none; }
+details.all summary::after { content: "+"; font-family: var(--mono); color: var(--muted); }
+details.all[open] summary::after { content: "−"; }
+.prlist { list-style: none; margin: 0; padding: 0 24px 16px; }
+.prlist li { display: grid; grid-template-columns: 92px 250px 1fr; gap: 16px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14.5px; align-items: baseline; }
+.prlist .d { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.prlist .r { font-family: var(--mono); font-size: 13px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prlist a { text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
 
-    .viewer-wrap { padding: 18px 0 28px; }
+footer { border-top: 1px solid var(--line); padding: 40px 0 56px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer a { color: var(--ink-2); }
 
-    .viewer {
-      width: 100%;
-      height: calc(100vh - 144px);
-      min-height: 720px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: white;
-      box-shadow: 0 10px 30px rgba(24, 54, 79, 0.08);
-    }
+/* responsive */
+@media (max-width: 860px) {
+  .flow { grid-template-columns: repeat(3, 1fr); }
+  .oss-intro { grid-template-columns: 1fr; gap: 20px; }
+  .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; }
+  .prlist li { grid-template-columns: 1fr; gap: 2px; }
+  .prlist .r { white-space: normal; }
+}
+@media (max-width: 640px) {
+  .bar nav a { padding: 6px 7px; font-size: 13px; }
+  .hero { padding: 48px 0 40px; }
+  .stats { grid-template-columns: repeat(2, 1fr); margin-top: 36px; }
+  .stat { padding: 16px 16px; }
+  .stat:nth-child(3) { border-left: 0; }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+  section.block { padding: 48px 0; }
+  .project-head { grid-template-columns: 1fr; }
+  .flow { grid-template-columns: repeat(2, 1fr); }
+  .case { padding: 20px 18px; }
+  .pv { grid-template-columns: 1fr; gap: 2px; }
+  .skill { grid-template-columns: 1fr; padding: 16px 18px; }
+  .pv dd { margin-bottom: 10px; }
+  .oss-cards { grid-template-columns: minmax(0, 1fr); }
+  .oss-nums b { font-size: 22px; }
+  .oss-nums div { padding: 14px 12px; }
+  .prlist { padding: 0 18px 12px; }
+  details.all summary { padding: 16px 18px; }
+}
+@media (max-width: 400px) {
+  .bar .me { display: none; }
+}
 
-    .fallback {
-      margin: 12px 2px 0;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-    }
-
-    .fallback a { color: var(--blue); }
-
-    @media (max-width: 720px) {
-      .header-inner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .actions { width: 100%; }
-      .button { flex: 1; }
-      .viewer { height: calc(100vh - 220px); min-height: 580px; }
-    }
-  </style>
+/* print → portfolio.pdf */
+@page { size: A4; margin: 14mm 12mm; }
+@media print {
+  :root { --bg: #fff; --surface: #fff; }
+  body { font-size: 12.5px; line-height: 1.6; }
+  .bar, .no-print { display: none !important; }
+  .wrap { width: 100%; }
+  .hero { padding: 0 0 20px; }
+  .hero h1 { font-size: 38px; margin-bottom: 12px; }
+  .hero .lead { font-size: 15px; margin-bottom: 16px; }
+  .stats { margin-top: 20px; }
+  .stat { padding: 12px 14px; }
+  .stat b { font-size: 22px; }
+  section.block { padding: 24px 0; break-before: auto; }
+  #wigul, #beach, #oss { break-before: page; border-top: 0; padding-top: 0; }
+  .sec-head { margin-bottom: 14px; }
+  h2 { font-size: 24px; }
+  .case, .oss-card, .skill, .flow li, .meta, .stats { break-inside: avoid; }
+  .case { padding: 16px 18px; }
+  .cases, .oss-cards { gap: 10px; }
+  .flow { grid-template-columns: repeat(6, 1fr); margin-bottom: 16px; }
+  .meta { grid-template-columns: repeat(4, auto); margin-bottom: 16px; padding: 12px 16px; }
+  pre { font-size: 11px; padding: 10px 12px; }
+  a { text-decoration: none; }
+  details.all::details-content { content-visibility: visible; display: block; }
+  details.all summary::after { content: ""; }
+  .prlist li { grid-template-columns: 74px 210px 1fr; gap: 10px; padding: 4px 0; font-size: 11px; }
+  .prlist .d, .prlist .r { white-space: nowrap; font-size: 10.5px; }
+  .prlist .r { overflow: hidden; text-overflow: ellipsis; }
+  footer { padding: 16px 0 0; }
+}
+</style>
 </head>
 <body>
-  <header class="header">
-    <div class="header-inner">
-      <div>
-        <h1>박재홍 | Backend Engineering Portfolio</h1>
-        <p class="subtitle">Java와 Spring을 기반으로 정합성 있는 API와 운영 가능한 서비스를 구현합니다.</p>
-      </div>
-      <nav class="actions" aria-label="포트폴리오 링크">
-        <a class="button primary" href="./portfolio.pdf" target="_blank" rel="noopener">PDF 새 창에서 보기</a>
-        <a class="button" href="https://github.com/PHJ2000" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </div>
-  </header>
 
-  <main class="viewer-wrap">
-    <iframe
-      class="viewer"
-      src="./portfolio.pdf#view=FitH"
-      title="박재홍 백엔드 엔지니어 포트폴리오 PDF"
-    ></iframe>
-    <p class="fallback">
-      PDF가 보이지 않으면 <a href="./portfolio.pdf" target="_blank" rel="noopener">여기에서 직접 열어주세요.</a>
-    </p>
-  </main>
+<header class="bar">
+  <div class="wrap">
+    <a class="me" href="#top">박재홍</a>
+    <nav aria-label="섹션">
+      <a href="#skills">기술</a>
+      <a href="#wigul">위굴</a>
+      <a href="#beach">Beach Complex</a>
+      <a href="#oss">오픈소스</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow">Backend Engineer · Java / Spring</p>
+    <h1>박재홍</h1>
+    <p class="lead">업무 규칙을 데이터 구조와 API로 옮기고, 그 규칙이 <strong>동시 요청·재시도·배포 실패</strong> 속에서도 지켜지는지 테스트와 운영 지표로 확인합니다.</p>
+    <div class="links">
+      <a class="btn primary" href="https://github.com/PHJ2000">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        github.com/PHJ2000
+      </a>
+      <a class="btn" href="https://play.google.com/store/apps/details?id=com.sa0sa.wigul">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>
+        위굴 · Google Play
+      </a>
+      <a class="btn no-print" href="./portfolio.pdf">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+        PDF 다운로드
+      </a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>34</b><span>Java 오픈소스 머지 PR<br>(31개 프로젝트)</span></div>
+      <div class="stat"><b>179</b><span>팀 프로젝트 머지 PR<br>(위굴 102 · Beach 77)</span></div>
+      <div class="stat"><b>201×1 409×9</b><span>동시 예약 10건에서<br>DB row 1건 보장</span></div>
+      <div class="stat"><b>44→4</b><span>N+1 제거 후<br>목록 조회 쿼리 수</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="skills">
+    <div class="sec-head"><span class="sec-no">00</span><h2>기술</h2></div>
+    <div class="skills">
+      <div class="skill"><h3>Backend</h3><ul class="chips"><li>Java 21</li><li>Spring Boot</li><li>Spring MVC</li><li>Spring Security</li><li>JPA</li><li>JWT · OAuth</li></ul></div>
+      <div class="skill"><h3>Data</h3><ul class="chips"><li>PostgreSQL</li><li>PostGIS</li><li>Redis</li><li>Flyway</li><li>DB 제약조건 · Trigger</li></ul></div>
+      <div class="skill"><h3>Test</h3><ul class="chips"><li>JUnit 5</li><li>MockMvc</li><li>Testcontainers</li><li>JaCoCo</li><li>부하 테스트</li></ul></div>
+      <div class="skill"><h3>Delivery</h3><ul class="chips"><li>GitHub Actions</li><li>Docker</li><li>GHCR</li><li>AWS EC2</li><li>GCP VM</li><li>Caddy · systemd</li></ul></div>
+      <div class="skill"><h3>Observability</h3><ul class="chips"><li>Micrometer Tracing</li><li>OpenTelemetry</li><li>Tempo</li><li>Loki · Alloy</li><li>Grafana</li></ul></div>
+    </div>
+  </section>
+
+  <!-- ───────── 위굴 ───────── -->
+  <section class="block" id="wigul">
+    <div class="sec-head"><span class="sec-no">01</span><span class="eyebrow" style="margin:0">Project</span></div>
+    <div class="project-head">
+      <h2>위굴 Backend
+        <a class="badge" href="https://play.google.com/store/apps/details?id=com.sa0sa.wigul">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          Google Play 출시
+        </a>
+      </h2>
+      <p class="summary">충동구매 직전에 예산과 셀프체크로 구매를 한 번 더 점검하게 하는 소비 의사결정 서비스입니다. 인증부터 위시 저장, 구매 결정, 리마인더와 회고까지 이어지는 백엔드와 배포·운영을 담당했습니다.</p>
+    </div>
+    <dl class="meta">
+      <div><dt>기간</dt><dd>2026.03 – 현재</dd></div>
+      <div><dt>역할</dt><dd>백엔드 · 배포/운영</dd></div>
+      <div><dt>머지 PR</dt><dd>102건</dd></div>
+      <div><dt>저장소</dt><dd><a href="https://github.com/SaGongSa-404/404_BE">SaGongSa-404/404_BE</a></dd></div>
+    </dl>
+
+    <ol class="flow" aria-label="서비스 흐름">
+      <li><b>인증</b>OAuth · JWT</li>
+      <li><b>위시 저장</b>직접 입력 · 쇼핑 링크</li>
+      <li><b>구매 숙려</b>예산 · 셀프체크</li>
+      <li><b>GO / STOP</b>결정과 상태 전이</li>
+      <li><b>리마인더</b>7일 후 FCM 알림</li>
+      <li><b>회고</b>구매 결과 기록</li>
+    </ol>
+
+    <div class="cases">
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">A</span>구매 결정 트랜잭션과 DB 불변조건</h3>
+          <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/6">PR #6</a><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/20">PR #20</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>구매 결정 한 번에 위시 상태, 월 예산, 리마인더, 결정 이벤트가 함께 바뀝니다. 일부만 반영되면 예산과 결정 결과가 어긋납니다.</dd>
+          <dt>해결</dt><dd><ul>
+            <li>결정 관련 변경을 <strong>하나의 트랜잭션</strong>으로 처리하고, 결과 조회 시 최신 상태가 아니라 <strong>결정 당시 이벤트</strong>를 반환</li>
+            <li>서비스 검증에 더해 <code>CHECK</code>·<code>UNIQUE</code>·partial index·trigger로 음수 금액, 셀프체크 범위, 활성 중복 데이터를 DB 레벨에서 차단</li>
+          </ul></dd>
+          <dt>검증</dt><dd>H2 대신 <strong>Testcontainers PostgreSQL</strong>로 Flyway 마이그레이션, JSONB, partial index, trigger를 실제 DB에서 검증</dd>
+        </dl>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">B</span>재시도로 생기는 중복 저장 방지</h3>
+          <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/180">PR #180</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>같은 상품을 다시 고민하는 건 정상 요청이지만, 더블탭이나 timeout 재시도로 같은 요청이 두 번 저장되면 안 됩니다. 내용 기반 중복 제거로는 둘을 구분할 수 없었습니다.</dd>
+          <dt>해결</dt><dd><strong>Idempotency-Key</strong> 계약과 사용자별 partial unique index로 "같은 요청의 재전송"만 걸러내고, 같은 내용의 새 요청은 허용</dd>
+        </dl>
+<pre><code><span class="k">create unique index</span> uk_saved_items_user_idempotency_key
+    <span class="k">on</span> saved_items(user_id, idempotency_key)
+ <span class="k">where</span> idempotency_key <span class="k">is not null</span>;</code></pre>
+        <div class="result"><span class="plain">같은 key → 기존 결과 반환</span><span class="plain">key 없음 → 새 항목</span><span class="plain">URL 상품 → 기존 중복 규칙 유지</span></div>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">C</span>쇼핑 링크 가져오기를 비동기 작업 큐로 전환</h3>
+          <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/191">PR #191</a><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/224">PR #224</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>상품 링크 분석은 브라우저(Playwright) 크롤링이라 느리고 무겁습니다. 동기 API로 두면 요청이 몰릴 때 서버 스레드와 브라우저 자원이 함께 묶입니다.</dd>
+          <dt>해결</dt><dd><ul>
+            <li>PostgreSQL 작업 테이블(<code>PENDING → RUNNING → SUCCEEDED/FAILED</code>)과 <code>FOR UPDATE SKIP LOCKED</code> 기반 worker로 비동기 처리, <strong>202 + Location</strong> 응답</li>
+            <li>전체 큐 100개·사용자별 활성 작업 상한, 포화 시 429. 중단된 RUNNING 작업 재시도와 최대 시도 후 실패 처리</li>
+            <li>여러 사용자의 같은 URL 요청은 <strong>대표 작업 1건만 크롤링</strong>하고 결과를 전파, 성공 5분·실패 30초 단기 캐시</li>
+            <li>외부 브로커 대신 DB 큐를 고른 이유와 재검토 조건을 ADR로 기록</li>
+          </ul></dd>
+          <dt>검증</dt><dd>작업 큐 통합 테스트와 전체 554개 테스트 통과, 전후 비교용 부하 테스트 도구(p50/p95/p99·오류율) 작성</dd>
+        </dl>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">D</span>N+1 쿼리 제거</h3>
+          <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/246">PR #246</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>마이페이지 목록 20건을 조회할 때 게시글마다 투표·작성자·상품을 따로 불러와 쿼리가 수십 번 실행됐습니다.</dd>
+          <dt>해결</dt><dd>게시글별 투표 조회를 단일 배치 쿼리로 바꾸고, 투표 목록은 게시글·작성자·상품을 fetch join으로 함께 로딩</dd>
+        </dl>
+        <div class="result"><span>내 게시글 24 → 5 쿼리</span><span>투표 목록 44 → 4 쿼리</span></div>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">E</span>Health Check 통과 후에만 트래픽을 넘기는 배포</h3>
+          <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/174">PR #174</a><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/253">PR #253</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>단일 GCP VM에서 앱을 교체하면 새 버전이 뜨지 않을 때 서비스가 그대로 중단됩니다.</dd>
+          <dt>해결</dt><dd><ul>
+            <li>새 JAR를 8081에 먼저 띄워 <code>/health</code> 통과 시에만 Caddy를 전환하고, 8080 교체 후 복귀. 어느 단계에서 실패해도 기존 프로세스가 트래픽을 계속 처리</li>
+            <li>배포 전 prod profile·secret·redirect 설정을 검사해 fail-fast, FCM 자격증명은 systemd drop-in으로 런타임 주입</li>
+            <li>운영 중 API 폭주와 로그인 공격에 대비해 경로별 요청 제한(429)과 차단 지표 추가</li>
+          </ul></dd>
+        </dl>
+        <ol class="steps" aria-label="배포 순서">
+          <li>Build · Test</li><li class="arrow">→</li>
+          <li>8081 후보 기동</li><li class="arrow">→</li>
+          <li class="ok">/health 통과</li><li class="arrow">→</li>
+          <li>Caddy 전환</li><li class="arrow">→</li>
+          <li>8080 교체 · 복귀</li>
+        </ol>
+      </article>
+    </div>
+  </section>
+
+  <!-- ───────── Beach Complex ───────── -->
+  <section class="block" id="beach">
+    <div class="sec-head"><span class="sec-no">02</span><span class="eyebrow" style="margin:0">Project</span></div>
+    <div class="project-head">
+      <h2>Beach Complex</h2>
+      <p class="summary">해수욕장 혼잡도·날씨 정보를 수집해 위치 기반으로 보여주고, 예약과 알림을 제공하는 서비스입니다. 백엔드와 AWS 배포, 관측 환경을 담당했습니다.</p>
+    </div>
+    <dl class="meta">
+      <div><dt>기간</dt><dd>2025.10 – 현재</dd></div>
+      <div><dt>역할</dt><dd>백엔드 · 인프라</dd></div>
+      <div><dt>머지 PR</dt><dd>77건</dd></div>
+      <div><dt>저장소</dt><dd><a href="https://github.com/Beach-complex/Beach_complex">Beach-complex/Beach_complex</a></dd></div>
+    </dl>
+
+    <div class="cases">
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">A</span>동시 예약 요청에서 1건만 저장</h3>
+          <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/155">PR #155</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>같은 사용자·해수욕장·시간의 예약이 동시에 들어오면, 서비스의 사전 조회만으로는 경쟁 조건을 막을 수 없습니다.</dd>
+          <dt>해결</dt><dd>DB <code>UNIQUE</code> 제약을 마지막 방어선으로 두고, 충돌을 500이 아닌 <strong>409 ProblemDetail</strong>(<code>RESERVATION_DUPLICATE</code>)로 변환</dd>
+          <dt>검증</dt><dd>10개 스레드 동시 요청을 MockMvc·실제 repository·고정 <code>Clock</code>으로 재현해 HTTP 응답과 최종 저장 상태를 함께 확인. 시간 경계(400), 인증(401), 타인 예약 취소(404), 취소 후 재예약도 검증</dd>
+        </dl>
+        <div class="result"><span>201 × 1</span><span>409 × 9</span><span>DB row × 1</span></div>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">B</span>외부 데이터 주기 수집과 상태 모델</h3>
+          <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/96">PR #96</a></div>
+        </div>
+        <dl class="pv">
+          <dt>해결</dt><dd><ul>
+            <li>30분 주기 스케줄러로 해수욕장별 혼잡도·날씨를 수집하고, <strong>시간별 관측 이력</strong>(BeachCondition)과 <strong>조회용 현재 상태</strong>(Beach.status)를 분리</li>
+            <li>응답이 없거나 코드가 누락된 대상만 건너뛰어 한 곳의 실패가 전체 수집을 멈추지 않도록 처리</li>
+          </ul></dd>
+          <dt>검증</dt><dd><code>Clock</code>을 주입해 스케줄러 시각을 고정하고 경계 조건을 재현</dd>
+        </dl>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">C</span>AWS EC2 컨테이너 배포 자동화</h3>
+          <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/209">PR #209</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/216">PR #216</a></div>
+        </div>
+        <dl class="pv">
+          <dt>해결</dt><dd><ul>
+            <li>이미지를 <code>latest</code>와 <strong>commit SHA</strong>로 태깅해 배포 버전을 추적하고, secret은 이미지 밖 EC2 env 파일로 주입</li>
+            <li>배포 후 Actuator Health를 재시도로 확인하고, 실패하면 컨테이너 상태와 최근 로그를 바로 출력</li>
+            <li>Firebase가 비활성화된 환경에서 앱이 부팅에 실패하던 문제를 조건부 빈 등록으로 해결</li>
+          </ul></dd>
+        </dl>
+        <ol class="steps" aria-label="배포 순서">
+          <li>Docker Buildx</li><li class="arrow">→</li>
+          <li>GHCR · SHA 태그</li><li class="arrow">→</li>
+          <li>EC2 Compose pull/up</li><li class="arrow">→</li>
+          <li class="ok">Actuator Health</li>
+        </ol>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <h3><span class="n">D</span>분산 추적과 로그 연결</h3>
+          <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/236">PR #236</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/243">PR #243</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/246">PR #246</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/264">PR #264</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>HTTP 요청, 비동기 이메일, 스케줄러가 각각 로그만 남겨 하나의 요청이 어디서 실패했는지 따라가기 어려웠습니다.</dd>
+          <dt>해결</dt><dd><ul>
+            <li>Micrometer Tracing(OpenTelemetry)으로 HTTP·<code>@Async</code> 이메일·SMTP 시도·스케줄러 구간에 span을 만들고 traceId를 로그 MDC와 연결</li>
+            <li>스케줄러는 실행별 root span과 대상별 span으로 나누고, 결과를 <code>success/skipped/error</code>로 제한해 개인정보·고카디널리티 값 수집을 차단</li>
+            <li>Alloy → Loki 로그 파이프라인을 구성하고 Grafana에서 <strong>로그 ↔ Trace</strong>를 오가도록 연결</li>
+          </ul></dd>
+          <dt>검증</dt><dd>in-memory exporter 기반 통합 테스트로 span 부모 관계와 예외 전파, MDC 정리 확인</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <!-- ───────── OSS ───────── -->
+  <section class="block" id="oss">
+    <div class="sec-head"><span class="sec-no">03</span><h2>오픈소스 기여</h2></div>
+    <div class="oss-intro">
+      <p>Java 라이브러리의 엣지 케이스 버그를 찾아 고쳤습니다. 코드를 고친 PR에는 모두 <strong>버그를 재현하는 회귀 테스트</strong>를 함께 냈고, 각 프로젝트의 전체 테스트와 포맷 규칙을 통과시켰습니다.</p>
+      <div class="oss-nums">
+        <div><b>34</b><span>머지된 PR</span></div>
+        <div><b>31</b><span>프로젝트</span></div>
+        <div><b>6.1k</b><span>최대 ★</span></div>
+      </div>
+    </div>
+
+    <div class="oss-cards">
+      <article class="oss-card">
+        <div class="repo"><a href="https://github.com/javaparser/javaparser">javaparser</a><span>★ 6.1k</span></div>
+        <h3>단항 연산자 출력이 식의 의미를 바꾸는 버그</h3>
+        <p><code>- -x</code>가 <code>--x</code>(감소 연산자)로 출력되는 문제를 두 Pretty Printer와 LexicalPreservingPrinter에서 모두 수정했습니다.</p>
+        <div class="verify"><a href="https://github.com/javaparser/javaparser/pull/5151">PR #5151</a> · +217 / −1</div>
+      </article>
+      <article class="oss-card">
+        <div class="repo"><a href="https://github.com/jgrapht/jgrapht">jgrapht</a><span>★ 2.7k</span></div>
+        <h3>Steiner 트리가 더 비싼 평행 간선을 고르는 버그</h3>
+        <p>경로를 정점 순서로 재구성하면서 가중치 1 대신 10인 간선을 선택하고, 입력 그래프에 없는 간선을 반환하던 문제를 수정했습니다.</p>
+        <div class="verify"><a href="https://github.com/jgrapht/jgrapht/pull/1391">PR #1391</a> · 10개 모듈 7,520 tests 통과</div>
+      </article>
+      <article class="oss-card">
+        <div class="repo"><a href="https://github.com/RoaringBitmap/RoaringBitmap">RoaringBitmap</a><span>★ 3.9k</span></div>
+        <h3>삭제 후 직렬화 결과가 깨지는 버그</h3>
+        <p><code>Roaring64Bitmap.remove</code>가 bitmap → array 컨테이너 전환을 무시해, 이후 portable 직렬화 왕복이 손상되던 문제를 수정했습니다.</p>
+        <div class="verify"><a href="https://github.com/RoaringBitmap/RoaringBitmap/pull/853">PR #853</a> · 35,297 tests 통과</div>
+      </article>
+      <article class="oss-card">
+        <div class="repo"><a href="https://github.com/amaembo/streamex">streamex</a><span>★ 2.2k</span></div>
+        <h3>큰 조합 스트림 분할 시 오버플로</h3>
+        <p>이항계수 계산 중간값이 넘쳐 <code>ofCombinations(64, 32)</code> 같은 병렬 스트림 분할이 멈추던 문제를, 임계값 이상에서만 약분 후 곱하도록 고쳤습니다.</p>
+        <div class="verify"><a href="https://github.com/amaembo/streamex/pull/288">PR #288</a> · 3개 변형 1,488 executions 통과</div>
+      </article>
+    </div>
+
+    <details class="all">
+      <summary>머지된 PR 전체 보기 (34)</summary>
+      <ul class="prlist">
+        <li><span class="d">2026-10-12</span><span class="r">javers/javers</span><a href="https://github.com/javers/javers/pull/1501">Preserve SQL Timestamp nanoseconds in JSON</a></li>
+        <li><span class="d">2026-10-12</span><span class="r">jOOQ/jOOR</span><a href="https://github.com/jOOQ/jOOR/pull/131">Handle null values in Reflect.equals and hashCode</a></li>
+        <li><span class="d">2026-10-12</span><span class="r">networknt/json-schema-validator</span><a href="https://github.com/networknt/json-schema-validator/pull/1298">[2.x] Fix uniqueItems validation for non-array inputs</a></li>
+        <li><span class="d">2026-10-12</span><span class="r">networknt/json-schema-validator</span><a href="https://github.com/networknt/json-schema-validator/pull/1297">Fix uniqueItems validation for non-array inputs</a></li>
+        <li><span class="d">2026-10-11</span><span class="r">aeron-io/agrona</span><a href="https://github.com/aeron-io/agrona/pull/380">Fix IntArrayList operations with different null values</a></li>
+        <li><span class="d">2026-10-11</span><span class="r">stleary/JSON-java</span><a href="https://github.com/stleary/JSON-java/pull/1087">Fix Property enumeration without local entries</a></li>
+        <li><span class="d">2026-10-10</span><span class="r">vavr-io/vavr</span><a href="https://github.com/vavr-io/vavr/pull/3358">Preserve priority order in PriorityQueue.distinctBy</a></li>
+        <li><span class="d">2026-10-09</span><span class="r">java-diff-utils/java-diff-utils</span><a href="https://github.com/java-diff-utils/java-diff-utils/pull/238">Track line-count changes when applying fuzzy patches</a></li>
+        <li><span class="d">2026-10-09</span><span class="r">jgrapht/jgrapht</span><a href="https://github.com/jgrapht/jgrapht/pull/1391">Preserve shortest-path edges in Kou-Markowsky-Berman Steiner trees</a></li>
+        <li><span class="d">2026-10-09</span><span class="r">jhalterman/typetools</span><a href="https://github.com/jhalterman/typetools/pull/88">Compare reified parameterized types structurally</a></li>
+        <li><span class="d">2026-10-09</span><span class="r">JSQLParser/JSqlParser</span><a href="https://github.com/JSQLParser/JSqlParser/pull/2757">fix: deparse casts to single-field row types</a></li>
+        <li><span class="d">2026-10-08</span><span class="r">FasterXML/java-classmate</span><a href="https://github.com/FasterXML/java-classmate/pull/126">Include array element types in equality and hashing</a></li>
+        <li><span class="d">2026-10-08</span><span class="r">knowm/XChart</span><a href="https://github.com/knowm/XChart/pull/1035">Allow tick spacing hints per Y-axis group</a></li>
+        <li><span class="d">2026-10-07</span><span class="r">javaparser/javaparser</span><a href="https://github.com/javaparser/javaparser/pull/5151">Preserve unary operator token boundaries in all printers</a></li>
+        <li><span class="d">2026-10-07</span><span class="r">knowm/XChart</span><a href="https://github.com/knowm/XChart/pull/1033">Accept null-free immutable lists in box charts</a></li>
+        <li><span class="d">2026-10-07</span><span class="r">ethlo/itu</span><a href="https://github.com/ethlo/itu/pull/70">Detect leap seconds across UTC offset date boundaries</a></li>
+        <li><span class="d">2026-10-07</span><span class="r">modelmapper/modelmapper</span><a href="https://github.com/modelmapper/modelmapper/pull/789">Preserve large floating-point values when converting to BigInteger</a></li>
+        <li><span class="d">2026-10-06</span><span class="r">albfernandez/juniversalchardet</span><a href="https://github.com/albfernandez/juniversalchardet/pull/73">Return unsigned values from EncodingDetectorInputStream.read()</a></li>
+        <li><span class="d">2026-10-06</span><span class="r">mangstadt/ez-vcard</span><a href="https://github.com/mangstadt/ez-vcard/pull/165">Disable grouping separators in vCard floating-point values</a></li>
+        <li><span class="d">2026-10-06</span><span class="r">fathzer/javaluator</span><a href="https://github.com/fathzer/javaluator/pull/16">Preserve large finite values when rounding</a></li>
+        <li><span class="d">2026-10-06</span><span class="r">jline/jline3</span><a href="https://github.com/jline/jline3/pull/2305">fix: recompute tab position after truncation</a></li>
+        <li><span class="d">2026-10-06</span><span class="r">semver4j/semver4j</span><a href="https://github.com/semver4j/semver4j/pull/478">Fix upper bounds for zero-major partial caret ranges</a></li>
+        <li><span class="d">2026-10-06</span><span class="r">jdbc-observations/datasource-proxy</span><a href="https://github.com/jdbc-observations/datasource-proxy/pull/135">Escape remaining control characters in JSON query logs</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">haraldk/TwelveMonkeys</span><a href="https://github.com/haraldk/TwelveMonkeys/pull/1356">Fix CompoundReader reset across reader boundaries</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">tinylog-org/tinylog</span><a href="https://github.com/tinylog-org/tinylog/pull/935">Handle a closing escape tick at the end of a message</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">optimatika/ojAlgo</span><a href="https://github.com/optimatika/ojAlgo/pull/695">Preserve milliseconds when converting offset and zoned date-times</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">amaembo/streamex</span><a href="https://github.com/amaembo/streamex/pull/288">Avoid intermediate overflow when splitting combination streams</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">vigna/dsiutils</span><a href="https://github.com/vigna/dsiutils/pull/10">Reject negative skips before changing reader state</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">JOML-CI/JOML</span><a href="https://github.com/JOML-CI/JOML/pull/428">Fix integer overflow in gridDistance</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">lukas-krecan/JsonUnit</span><a href="https://github.com/lukas-krecan/JsonUnit/pull/1206">Preserve shared matches in unordered array comparisons</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">RoaringBitmap/RoaringBitmap</span><a href="https://github.com/RoaringBitmap/RoaringBitmap/pull/853">Preserve replacement containers in Roaring64Bitmap.remove</a></li>
+        <li><span class="d">2026-10-05</span><span class="r">making/yavi</span><a href="https://github.com/making/yavi/pull/519">Preserve set membership semantics in containsAll constraints</a></li>
+        <li><span class="d">2026-10-04</span><span class="r">Sekelenao/Flinkboot</span><a href="https://github.com/Sekelenao/Flinkboot/pull/267">#237: fix(core): reject exponential backoff multiplier equal to one</a></li>
+        <li><span class="d">2026-10-04</span><span class="r">Sekelenao/Flinkboot</span><a href="https://github.com/Sekelenao/Flinkboot/pull/266">#243: docs(core): add execution package info</a></li>
+      </ul>
+    </details>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>박재홍 · Backend Engineer</span>
+    <span><a href="https://github.com/PHJ2000">github.com/PHJ2000</a> · 2026.10 기준</span>
+  </div>
+</footer>
+
+<script>
+  // 인쇄할 때 PR 전체 목록을 펼친다.
+  addEventListener('beforeprint', () => document.querySelectorAll('details').forEach(d => d.open = true));
+</script>
 </body>
 </html>
