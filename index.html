@@ -102,6 +102,7 @@ a { color: inherit; }
 .stat { padding: 20px 22px; border-left: 1px solid var(--line); }
 .stat:first-child { border-left: 0; }
 .stat b { display: block; font-family: var(--mono); font-size: clamp(24px, 3.4vw, 32px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }
+.http-results i { font-style: normal; white-space: nowrap; }
 .stat span { display: block; color: var(--muted); font-size: 14px; margin-top: 6px; line-height: 1.45; }
 
 /* sections */
@@ -217,27 +218,71 @@ footer a { color: var(--ink-2); }
   .prlist .r { white-space: normal; }
 }
 @media (max-width: 640px) {
-  .bar nav a { padding: 6px 7px; font-size: 13px; }
-  .hero { padding: 48px 0 40px; }
-  .stats { grid-template-columns: repeat(2, 1fr); margin-top: 36px; }
-  .stat { padding: 16px 16px; }
+  html { scroll-padding-top: 108px; }
+  .wrap { width: calc(100% - 40px); }
+  .bar .wrap { height: auto; flex-direction: column; align-items: stretch; gap: 0; padding-top: 10px; }
+  .bar .me { align-self: flex-start; font-size: 14px; }
+  .bar nav { display: grid; grid-template-columns: auto auto auto auto; gap: 4px; padding: 6px 0; overflow: visible; }
+  .bar nav a { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 6px 4px; font-size: 12px; }
+  .hero { padding: 36px 0; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.05em; }
+  .hero h1 { font-size: 44px; margin-bottom: 20px; }
+  .hero .lead { font-size: 17px; line-height: 1.8; margin-bottom: 24px; }
+  .links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .btn { justify-content: center; min-width: 0; min-height: 48px; padding: 10px 8px; font-size: 13px; }
+  .links .primary, .links [data-mail] { grid-column: 1 / -1; }
+  .btn [data-mail-text] { min-width: 0; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 28px; }
+  .stat { min-width: 0; padding: 18px 14px; }
+  .stat b { font-size: 27px; }
+  .stat b.http-results { display: flex; flex-direction: column; gap: 4px; font-size: 22px; }
+  .stat span { font-size: 12px; line-height: 1.6; }
   .stat:nth-child(3) { border-left: 0; }
   .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
-  section.block { padding: 48px 0; }
-  .project-head { grid-template-columns: 1fr; }
-  .flow { grid-template-columns: repeat(2, 1fr); }
-  .case { padding: 20px 18px; }
+  section.block { padding: 36px 0; }
+  .sec-head { gap: 10px; margin-bottom: 22px; }
+  .project-head { grid-template-columns: minmax(0, 1fr); margin-bottom: 20px; }
+  .project-head h2 { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .project-head .summary { font-size: 16px; line-height: 1.8; }
+  .meta { padding: 16px; gap: 16px 12px; }
+  .meta dd { font-size: 14px; }
+  .meta div:last-child { grid-column: 1 / -1; }
+  .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 24px; }
+  .flow li { padding: 12px; font-size: 13px; }
+  .case { min-width: 0; padding: 20px 16px; }
+  .case-top { gap: 12px; }
+  .case-top h3 { display: block; font-size: 18px; line-height: 1.55; }
+  .case-top h3 .n { display: block; margin-bottom: 6px; }
+  .pr { display: inline-flex; align-items: center; min-height: 36px; padding: 5px 10px; }
   .pv { grid-template-columns: 1fr; gap: 2px; }
   .skill { grid-template-columns: 1fr; padding: 16px 18px; }
-  .pv dd { margin-bottom: 10px; }
+  .pv dt:not(:first-child) { margin-top: 14px; }
+  .pv dd { min-width: 0; font-size: 15px; line-height: 1.85; }
+  .pv dd li + li { margin-top: 8px; }
+  pre { max-width: 100%; padding: 14px; font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .result { gap: 6px; }
+  .result span { max-width: 100%; font-size: 13px; }
+  .steps { align-items: stretch; flex-direction: column; gap: 4px; }
+  .steps li { text-align: center; }
+  .steps li.arrow { font-size: 0; line-height: 1; }
+  .steps li.arrow::after { content: "↓"; font-size: 16px; }
   .oss-cards { grid-template-columns: minmax(0, 1fr); }
+  .oss-card { min-width: 0; padding: 20px 16px; }
+  .oss-card .repo { flex-direction: column; gap: 6px; align-items: flex-start; margin-bottom: 12px; }
+  .oss-card .repo a { overflow-wrap: anywhere; }
+  .oss-card .repo span { color: var(--accent); font-size: 10px; background: var(--accent-soft); padding: 2px 7px; border-radius: 4px; }
   .oss-nums b { font-size: 22px; }
   .oss-nums div { padding: 14px 12px; }
   .prlist { padding: 0 18px 12px; }
+  .prlist li { padding: 14px 0; gap: 6px; }
   details.all summary { padding: 16px 18px; }
+  footer { padding: 28px 0 36px; }
+  footer .wrap { flex-direction: column; gap: 10px; font-size: 12px; }
 }
-@media (max-width: 400px) {
-  .bar .me { display: none; }
+@media (max-width: 360px) {
+  .wrap { width: calc(100% - 32px); }
+  .btn { font-size: 12px; gap: 6px; }
+  .meta { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* print → portfolio.pdf */
@@ -316,7 +361,7 @@ footer a { color: var(--ink-2); }
     <div class="stats">
       <div class="stat"><b>39</b><span>외부 오픈소스 머지 PR<br>(34개 프로젝트)</span></div>
       <div class="stat"><b>179</b><span>팀 프로젝트 머지 PR<br>(위굴 102 · Beach 77)</span></div>
-      <div class="stat"><b>201×1 409×9</b><span>동시 예약 10건에서<br>DB row 1건 보장</span></div>
+      <div class="stat"><b class="http-results"><i>201×1</i> <i>409×9</i></b><span>동시 예약 10건에서<br>DB row 1건 보장</span></div>
       <div class="stat"><b>44→4</b><span>N+1 제거 후<br>목록 조회 쿼리 수</span></div>
     </div>
   </section>
