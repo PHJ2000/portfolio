@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>박재홍 · Backend Engineer</title>
-<meta name="description" content="Java·Spring 백엔드 엔지니어 박재홍의 포트폴리오. 위굴(Google Play 출시)·Beach Complex 백엔드와 외부 저장소 70곳에서 PR 95건 병합.">
+<meta name="description" content="Java·Spring 백엔드 엔지니어 박재홍의 포트폴리오. 구매 결정 트랜잭션, JPA 조회 쿼리 개선, 예약 동시성, 영속 이메일 작업과 장애 복구 사례를 소개합니다.">
 <meta property="og:title" content="박재홍 · Backend Engineer">
 <meta property="og:description" content="정합성, 재시도·동시성 제어, 배포와 관측까지 — Java·Spring 백엔드 포트폴리오">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -101,6 +101,9 @@ a { color: inherit; }
 }
 .stat { padding: 20px 22px; border-left: 1px solid var(--line); }
 .stat:first-child { border-left: 0; }
+.stat a { display: block; text-decoration: none; }
+.stat a:hover b { color: var(--accent); }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .stat b { display: block; font-family: var(--mono); font-size: clamp(24px, 3.4vw, 32px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }
 .http-results i { font-style: normal; white-space: nowrap; }
 .stat span { display: block; color: var(--muted); font-size: 14px; margin-top: 6px; line-height: 1.45; }
@@ -176,6 +179,9 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .steps li { font-size: 13.5px; padding: 5px 11px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--bg); }
 .steps li.arrow { border: 0; background: none; padding: 0 2px; color: var(--muted); }
 .steps li.ok { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+.supporting { margin: 20px 0 0; padding: 16px 20px; border-left: 3px solid var(--line-strong); color: var(--ink-2); font-size: 14px; }
+.supporting a { text-underline-offset: 3px; }
 
 /* oss */
 .oss-intro { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; margin-bottom: 32px; align-items: end; }
@@ -359,18 +365,18 @@ footer a { color: var(--ink-2); }
     </div>
 
     <div class="stats">
-      <div class="stat"><b>95</b><span>외부 오픈소스 머지 PR<br>(외부 저장소 70곳)</span></div>
-      <div class="stat"><b>179</b><span>팀 프로젝트 머지 PR<br>(위굴 102 · Beach 77)</span></div>
-      <div class="stat"><b class="http-results"><i>201×1</i> <i>409×9</i></b><span>동시 예약 10건에서<br>DB row 1건 보장</span></div>
-      <div class="stat"><b>44→4</b><span>N+1 제거 후<br>목록 조회 쿼리 수</span></div>
+      <div class="stat"><a href="#wigul-query"><b>44 → 4</b><span>JPA 목록 조회<br>쿼리 수 개선</span></a></div>
+      <div class="stat"><a href="#beach-reservation"><b class="http-results"><i>201×1</i> <i>409×9</i></b><span>동시 예약 10건에서<br>DB row 1건 확인</span></a></div>
+      <div class="stat"><a href="#beach-email"><b>재시작 복구</b><span>영속 이메일 작업<br>재시도·작업 소유권 검증</span></a></div>
+      <div class="stat"><a href="#wigul-deploy"><b>CI/CD</b><span>배포 자동화<br>Health Check 후 전환</span></a></div>
     </div>
   </section>
 
   <section class="block" id="skills">
     <div class="sec-head"><span class="sec-no">00</span><h2>기술</h2></div>
     <div class="skills">
-      <div class="skill"><h3>Backend</h3><ul class="chips"><li>Java 21</li><li>Spring Boot</li><li>Spring MVC</li><li>Spring Security</li><li>JPA</li><li>JWT · OAuth</li></ul></div>
-      <div class="skill"><h3>Data</h3><ul class="chips"><li>PostgreSQL</li><li>PostGIS</li><li>Redis</li><li>Flyway</li><li>DB 제약조건 · Trigger</li></ul></div>
+      <div class="skill"><h3>Backend</h3><ul class="chips"><li>Java 21</li><li>Spring Boot</li><li>Spring MVC</li><li>Spring Security</li><li>JPA / Hibernate</li><li>JdbcTemplate</li><li>JWT · OAuth</li></ul></div>
+      <div class="skill"><h3>Data</h3><ul class="chips"><li>PostgreSQL</li><li>PostGIS</li><li>Caffeine</li><li>Flyway</li><li>DB 제약조건 · Trigger</li></ul></div>
       <div class="skill"><h3>Test</h3><ul class="chips"><li>JUnit 5</li><li>MockMvc</li><li>Testcontainers</li><li>JaCoCo</li><li>부하 테스트</li></ul></div>
       <div class="skill"><h3>Delivery</h3><ul class="chips"><li>GitHub Actions</li><li>Docker</li><li>GHCR</li><li>AWS EC2</li><li>GCP VM</li><li>Caddy · systemd</li></ul></div>
       <div class="skill"><h3>Observability</h3><ul class="chips"><li>Micrometer Tracing</li><li>OpenTelemetry</li><li>Tempo</li><li>Loki · Alloy</li><li>Grafana</li></ul></div>
@@ -421,41 +427,9 @@ footer a { color: var(--ink-2); }
         </dl>
       </article>
 
-      <article class="case">
+      <article class="case" id="wigul-query">
         <div class="case-top">
-          <h3><span class="n">B</span>재시도로 생기는 중복 저장 방지</h3>
-          <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/180">PR #180</a></div>
-        </div>
-        <dl class="pv">
-          <dt>문제</dt><dd>같은 상품을 다시 고민하는 건 정상 요청이지만, 더블탭이나 timeout 재시도로 같은 요청이 두 번 저장되면 안 됩니다. 내용 기반 중복 제거로는 둘을 구분할 수 없었습니다.</dd>
-          <dt>해결</dt><dd><strong>Idempotency-Key</strong> 계약과 사용자별 partial unique index로 "같은 요청의 재전송"만 걸러내고, 같은 내용의 새 요청은 허용</dd>
-        </dl>
-<pre><code><span class="k">create unique index</span> uk_saved_items_user_idempotency_key
-    <span class="k">on</span> saved_items(user_id, idempotency_key)
- <span class="k">where</span> idempotency_key <span class="k">is not null</span>;</code></pre>
-        <div class="result"><span class="plain">같은 key → 기존 결과 반환</span><span class="plain">key 없음 → 새 항목</span><span class="plain">URL 상품 → 기존 중복 규칙 유지</span></div>
-      </article>
-
-      <article class="case">
-        <div class="case-top">
-          <h3><span class="n">C</span>쇼핑 링크 가져오기를 비동기 작업 큐로 전환</h3>
-          <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/191">PR #191</a><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/224">PR #224</a></div>
-        </div>
-        <dl class="pv">
-          <dt>문제</dt><dd>상품 링크 분석은 브라우저(Playwright) 크롤링이라 느리고 무겁습니다. 동기 API로 두면 요청이 몰릴 때 서버 스레드와 브라우저 자원이 함께 묶입니다.</dd>
-          <dt>해결</dt><dd><ul>
-            <li>PostgreSQL 작업 테이블(<code>PENDING → RUNNING → SUCCEEDED/FAILED</code>)과 <code>FOR UPDATE SKIP LOCKED</code> 기반 worker로 비동기 처리, <strong>202 + Location</strong> 응답</li>
-            <li>전체 큐 100개·사용자별 활성 작업 상한, 포화 시 429. 중단된 RUNNING 작업 재시도와 최대 시도 후 실패 처리</li>
-            <li>여러 사용자의 같은 URL 요청은 <strong>대표 작업 1건만 크롤링</strong>하고 결과를 전파, 성공 5분·실패 30초 단기 캐시</li>
-            <li>외부 브로커 대신 DB 큐를 고른 이유와 재검토 조건을 ADR로 기록</li>
-          </ul></dd>
-          <dt>검증</dt><dd>작업 큐 통합 테스트와 전체 554개 테스트 통과, 전후 비교용 부하 테스트 도구(p50/p95/p99·오류율) 작성</dd>
-        </dl>
-      </article>
-
-      <article class="case">
-        <div class="case-top">
-          <h3><span class="n">D</span>N+1 쿼리 제거</h3>
+          <h3><span class="n">B</span>N+1 쿼리 제거</h3>
           <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/246">PR #246</a></div>
         </div>
         <dl class="pv">
@@ -467,16 +441,34 @@ footer a { color: var(--ink-2); }
 
       <article class="case">
         <div class="case-top">
-          <h3><span class="n">E</span>Health Check 통과 후에만 트래픽을 넘기는 배포</h3>
+          <h3><span class="n">C</span>비동기 작업 큐·재시도와 작업 소유권</h3>
+          <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/191">PR #191</a><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/224">PR #224</a><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/260">PR #260</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>쇼핑몰에 따라 HTML 분석과 브라우저 렌더링을 병행하는 외부 상품 수집은 처리 시간이 길고, 응답 지연·사이트 장애의 영향을 받습니다. 중단된 작업을 재선점한 뒤 이전 워커가 늦게 완료하면 새 결과를 덮어쓰는 문제도 있었습니다.</dd>
+          <dt>해결</dt><dd><ul>
+            <li>PostgreSQL 작업 테이블(<code>PENDING → RUNNING → SUCCEEDED/FAILED</code>)과 <code>FOR UPDATE SKIP LOCKED</code> 기반 worker로 비동기 처리, <strong>202 + Location</strong> 응답</li>
+            <li>전체 큐 100개·사용자별 활성 작업 상한, 포화 시 429. 중단된 RUNNING 작업 재시도와 최대 시도 후 실패 처리</li>
+            <li>여러 사용자의 같은 URL 요청은 <strong>대표 작업 1건만 크롤링</strong>하고 결과를 전파, 성공 5분·실패 30초 단기 캐시</li>
+            <li>완료 UPDATE에 <strong><code>attempt_count</code> 조건</strong>을 추가해 오래된 실행의 성공·실패 결과와 후속 작업 갱신을 차단. DB 큐 선택 이유와 재검토 조건은 ADR로 기록</li>
+          </ul></dd>
+          <dt>검증</dt><dd>Testcontainers PostgreSQL로 선점·재시도·중단 복구를 검증하고, <a href="https://github.com/SaGongSa-404/404_BE/blob/develop/src/test/java/com/sagongsa/backend/itemimport/job/ShoppingImportJobOwnershipIntegrationTest.java">작업 소유권 통합 테스트</a>로 오래된 워커의 성공·실패 결과 차단을 재현했습니다. 전후 비교용 부하 테스트 도구(p50/p95/p99·오류율)도 작성했습니다.</dd>
+        </dl>
+      </article>
+
+      <article class="case" id="wigul-deploy">
+        <div class="case-top">
+          <h3><span class="n">D</span>Health Check 통과 후에만 트래픽을 넘기는 배포</h3>
           <div class="prs"><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/174">PR #174</a><a class="pr" href="https://github.com/SaGongSa-404/404_BE/pull/253">PR #253</a></div>
         </div>
         <dl class="pv">
           <dt>문제</dt><dd>단일 GCP VM에서 앱을 교체하면 새 버전이 뜨지 않을 때 서비스가 그대로 중단됩니다.</dd>
           <dt>해결</dt><dd><ul>
-            <li>새 JAR를 8081에 먼저 띄워 <code>/health</code> 통과 시에만 Caddy를 전환하고, 8080 교체 후 복귀. 어느 단계에서 실패해도 기존 프로세스가 트래픽을 계속 처리</li>
+            <li>새 JAR를 8081에 먼저 띄워 <code>/health</code> 통과 후 Caddy 트래픽을 전환. 8080 교체에 실패하면 검증된 standby를 유지하도록 복구 경로 구성</li>
             <li>배포 전 prod profile·secret·redirect 설정을 검사해 fail-fast, FCM 자격증명은 systemd drop-in으로 런타임 주입</li>
             <li>운영 중 API 폭주와 로그인 공격에 대비해 경로별 요청 제한(429)과 차단 지표 추가</li>
           </ul></dd>
+          <dt>제약</dt><dd>단일 VM 자체의 장애와 DB 마이그레이션 호환성은 별도 제약으로 관리합니다.</dd>
         </dl>
         <ol class="steps" aria-label="배포 순서">
           <li>Build · Test</li><li class="arrow">→</li>
@@ -487,6 +479,7 @@ footer a { color: var(--ink-2); }
         </ol>
       </article>
     </div>
+    <p class="supporting"><strong>기타 구현 · 요청 멱등성</strong> — <code>Idempotency-Key</code>와 사용자별 partial unique index로 더블탭·timeout 재전송은 기존 결과를 반환하고, 같은 내용의 새로운 요청은 허용했습니다. <a href="https://github.com/SaGongSa-404/404_BE/pull/180">PR #180</a></p>
   </section>
 
   <!-- ───────── Beach Complex ───────── -->
@@ -504,9 +497,27 @@ footer a { color: var(--ink-2); }
     </dl>
 
     <div class="cases">
-      <article class="case">
+      <article class="case" id="beach-email">
         <div class="case-top">
-          <h3><span class="n">A</span>동시 예약 요청에서 1건만 저장</h3>
+          <h3><span class="n">A</span>재시작·다중 워커 환경에서 복구되는 인증 이메일 작업</h3>
+          <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/271">PR #271</a></div>
+        </div>
+        <dl class="pv">
+          <dt>문제</dt><dd>기존 <code>AFTER_COMMIT + @Async/@Retryable</code> 방식은 애플리케이션이 종료되면 대기 중인 이메일 작업과 재시도 상태가 사라졌습니다.</dd>
+          <dt>해결</dt><dd><ul>
+            <li>인증 토큰과 AES-GCM으로 암호화한 발송 작업을 <strong>하나의 DB 트랜잭션</strong>으로 저장</li>
+            <li><code>FOR UPDATE SKIP LOCKED</code>로 선점·시도 횟수·이력을 먼저 커밋하고, <strong>SMTP는 DB 트랜잭션 밖에서 호출</strong></li>
+            <li>lease 만료 작업을 재선점하고 시도 번호가 일치할 때만 완료 갱신. 최초 포함 최대 4회·지수 백오프로 재시도</li>
+          </ul></dd>
+          <dt>검증</dt><dd><a href="https://github.com/Beach-complex/Beach_complex/blob/main/src/test/java/com/beachcheck/auth/integration/EmailJobIntegrationTest.java">PostgreSQL 통합 테스트</a>로 같은 DB를 유지한 Spring 컨텍스트 재시작, 두 워커의 동시 실행, 오래된 워커의 결과 차단, SMTP 수락 후 DB 기록 실패를 재현했습니다.</dd>
+          <dt>제약</dt><dd>SMTP 수락 후 DB 기록에 실패하거나 전송이 lease를 넘기면 중복 발송이 가능합니다. 발송 이력을 남기되 exactly-once는 보장하지 않습니다. 실제 SMTP 수신과 운영 장애 복구 실험은 별도 검증 대상입니다.</dd>
+        </dl>
+        <div class="result"><span>재시작 후 미완료 작업 복구</span><span>오래된 워커의 완료 갱신 차단</span></div>
+      </article>
+
+      <article class="case" id="beach-reservation">
+        <div class="case-top">
+          <h3><span class="n">B</span>동시 예약 요청에서 1건만 저장</h3>
           <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/155">PR #155</a></div>
         </div>
         <dl class="pv">
@@ -519,21 +530,25 @@ footer a { color: var(--ink-2); }
 
       <article class="case">
         <div class="case-top">
-          <h3><span class="n">B</span>외부 데이터 주기 수집과 상태 모델</h3>
-          <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/96">PR #96</a></div>
+          <h3><span class="n">C</span>Outbox·분산 Trace와 로그 연결</h3>
+          <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/236">PR #236</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/243">PR #243</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/246">PR #246</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/264">PR #264</a></div>
         </div>
         <dl class="pv">
+          <dt>문제</dt><dd>HTTP 요청, 비동기 이메일, 스케줄러가 각각 로그만 남겨 하나의 요청이 어디서 실패했는지 따라가기 어려웠습니다.</dd>
           <dt>해결</dt><dd><ul>
-            <li>30분 주기 스케줄러로 해수욕장별 혼잡도·날씨를 수집하고, <strong>시간별 관측 이력</strong>(BeachCondition)과 <strong>조회용 현재 상태</strong>(Beach.status)를 분리</li>
-            <li>응답이 없거나 코드가 누락된 대상만 건너뛰어 한 곳의 실패가 전체 수집을 멈추지 않도록 처리</li>
+            <li>Micrometer Tracing(OpenTelemetry)으로 HTTP·이메일 작업·SMTP 시도·스케줄러 구간을 계측하고 traceId를 로그 MDC와 연결. 복구된 이메일 시도는 생산 Trace와 Span Link로 연결</li>
+            <li>스케줄러는 실행별 root span과 대상별 span으로 나누고, 결과를 <code>success/skipped/error</code>로 제한해 개인정보·고카디널리티 값 수집을 차단</li>
+            <li>Outbox의 조회·FCM 전송·상태 갱신을 span으로 나누고, 재시도·영구 실패와 DB 커밋 결과를 추적</li>
+            <li>Alloy → Loki 로그 파이프라인을 구성하고 Grafana에서 <strong>로그 ↔ Trace</strong>를 오가도록 연결</li>
           </ul></dd>
-          <dt>검증</dt><dd><code>Clock</code>을 주입해 스케줄러 시각을 고정하고 경계 조건을 재현</dd>
+          <dt>검증</dt><dd>in-memory exporter 기반 통합 테스트로 span 부모 관계와 예외 전파, MDC 정리 확인</dd>
+          <dt>제약</dt><dd>Outbox는 조회와 전송 트랜잭션이 분리되어 있어 다중 인스턴스의 중복 선점 방지는 추가 검증 과제로 남아 있습니다.</dd>
         </dl>
       </article>
 
       <article class="case">
         <div class="case-top">
-          <h3><span class="n">C</span>AWS EC2 컨테이너 배포 자동화</h3>
+          <h3><span class="n">D</span>AWS EC2 컨테이너 배포 자동화</h3>
           <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/209">PR #209</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/216">PR #216</a></div>
         </div>
         <dl class="pv">
@@ -542,6 +557,7 @@ footer a { color: var(--ink-2); }
             <li>배포 후 Actuator Health를 재시도로 확인하고, 실패하면 컨테이너 상태와 최근 로그를 바로 출력</li>
             <li>Firebase가 비활성화된 환경에서 앱이 부팅에 실패하던 문제를 조건부 빈 등록으로 해결</li>
           </ul></dd>
+          <dt>실행 기록</dt><dd><a href="https://github.com/Beach-complex/Beach_complex/actions/runs/35329635508">2026.09.18 CD 성공</a> 이후, <a href="https://github.com/Beach-complex/Beach_complex/actions/runs/41298701025">11.01 실행</a>은 이미지 빌드·푸시에 성공했으나 EC2 SSH 접속 단계에서 실패했습니다. 이후 배포 복구 성공은 확인되지 않았습니다.</dd>
         </dl>
         <ol class="steps" aria-label="배포 순서">
           <li>Docker Buildx</li><li class="arrow">→</li>
@@ -550,30 +566,15 @@ footer a { color: var(--ink-2); }
           <li class="ok">Actuator Health</li>
         </ol>
       </article>
-
-      <article class="case">
-        <div class="case-top">
-          <h3><span class="n">D</span>분산 추적과 로그 연결</h3>
-          <div class="prs"><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/236">PR #236</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/243">PR #243</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/246">PR #246</a><a class="pr" href="https://github.com/Beach-complex/Beach_complex/pull/264">PR #264</a></div>
-        </div>
-        <dl class="pv">
-          <dt>문제</dt><dd>HTTP 요청, 비동기 이메일, 스케줄러가 각각 로그만 남겨 하나의 요청이 어디서 실패했는지 따라가기 어려웠습니다.</dd>
-          <dt>해결</dt><dd><ul>
-            <li>Micrometer Tracing(OpenTelemetry)으로 HTTP·<code>@Async</code> 이메일·SMTP 시도·스케줄러 구간에 span을 만들고 traceId를 로그 MDC와 연결</li>
-            <li>스케줄러는 실행별 root span과 대상별 span으로 나누고, 결과를 <code>success/skipped/error</code>로 제한해 개인정보·고카디널리티 값 수집을 차단</li>
-            <li>Alloy → Loki 로그 파이프라인을 구성하고 Grafana에서 <strong>로그 ↔ Trace</strong>를 오가도록 연결</li>
-          </ul></dd>
-          <dt>검증</dt><dd>in-memory exporter 기반 통합 테스트로 span 부모 관계와 예외 전파, MDC 정리 확인</dd>
-        </dl>
-      </article>
     </div>
+    <p class="supporting"><strong>기타 구현 · 주기 수집과 상태 모델</strong> — 30분 주기로 혼잡도·날씨를 수집하고 관측 이력과 조회용 현재 상태를 분리했습니다. 응답이 없는 대상만 건너뛰고, <code>Clock</code>으로 시간 경계를 검증했습니다. <a href="https://github.com/Beach-complex/Beach_complex/pull/96">PR #96</a></p>
   </section>
 
   <!-- ───────── OSS ───────── -->
   <section class="block" id="oss">
     <div class="sec-head"><span class="sec-no">03</span><h2>오픈소스 기여</h2></div>
     <div class="oss-intro">
-      <p>Java 라이브러리와 다국어 코드 분석 도구의 경계 조건을 고쳤습니다. <strong>버그 재현 → 원인 분석 → 회귀 테스트</strong>로 변경을 검증하고, 프로젝트별 테스트 범위와 결과를 각 PR에 기록했습니다.</p>
+      <p>Java 라이브러리의 데이터 정밀도·직렬화·코드 출력·JDBC 로그에서 경계 조건을 고쳤습니다. <strong>버그 재현 → 원인 분석 → 회귀 테스트</strong>로 변경을 검증하고, 프로젝트별 테스트 범위와 결과를 각 PR에 기록했습니다.</p>
       <div class="oss-nums">
         <div><b>95</b><span>머지된 PR</span></div>
         <div><b>70</b><span>외부 저장소</span></div>
@@ -604,11 +605,11 @@ footer a { color: var(--ink-2); }
         <div class="verify"><a href="https://github.com/javaparser/javaparser/pull/5151">PR #5151</a> · PR 기록: Java 17 전체 verify, 5,673건 보고·41건 skipped</div>
       </article>
       <article class="oss-card">
-        <div class="repo"><a href="https://github.com/repowise-dev/repowise">repowise</a><span>MERGED</span></div>
-        <h3>다국어 함수 매개변수 집계와 진단 누락 수정</h3>
-        <p>Java·Rust·C#의 주석, C/C++ 선언자, Kotlin 기본값·수식자를 실제 매개변수와 구분했습니다. 전체·타입·스칼라 집계에 같은 필터를 적용하고 캐시 갱신 버전을 맞췄습니다.</p>
-        <p>Okio의 Kotlin 함수 3,907개에서 <code>primitive_obsession</code> 진단이 0 → 10건으로 바뀌었습니다. 외부 바인딩 2건은 오탐 후보이며, 진단 증가를 정확도 향상이나 버그 10건 수정으로 해석하지 않았습니다.</p>
-        <div class="verify"><a href="https://github.com/repowise-dev/repowise/pull/3848">PR #3848</a> · PR 기록: 집중 테스트 60건 통과<br>기존 CLI 실패 2건 별도 재현 · 최종 전체 스위트 재실행 없음</div>
+        <div class="repo"><a href="https://github.com/jdbc-observations/datasource-proxy">jdbc-observations / datasource-proxy</a><span>MERGED</span></div>
+        <h3>제어 문자 때문에 깨지는 JDBC JSON 로그 수정</h3>
+        <p>SQL 문자열에 NUL 등 제어 문자가 포함되면 쿼리 로그가 유효한 JSON으로 파싱되지 않았습니다. 기존 단축 escape는 유지하고, 나머지 U+0020 미만 문자를 Unicode escape로 처리했습니다.</p>
+        <p>문자열 단위와 전체 쿼리 로그 회귀 테스트를 추가하고, JSON 파서로 원래 쿼리 문자열이 복원되는지 확인했습니다.</p>
+        <div class="verify"><a href="https://github.com/jdbc-observations/datasource-proxy/pull/135">PR #135</a> · PR 기록: Java 8 mvn verify, 533건 통과</div>
       </article>
     </div>
 
@@ -664,7 +665,7 @@ footer a { color: var(--ink-2); }
 <footer>
   <div class="wrap">
     <span>박재홍 · Backend Engineer</span>
-    <span><a data-mail href="#"><span data-mail-text>koreaworldclass [at] gmail.com</span></a> · <a href="https://github.com/PHJ2000">github.com/PHJ2000</a> · 2026.11.07 기준 (KST)</span>
+    <span><a data-mail href="#"><span data-mail-text>koreaworldclass [at] gmail.com</span></a> · <a href="https://github.com/PHJ2000">github.com/PHJ2000</a> · 2026.11.12 기준 (KST)</span>
   </div>
 </footer>
 
